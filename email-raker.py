@@ -10,6 +10,22 @@ An encoding of UTF-8 is assumed.
 
 @author Nima Riahi <nimariahizrh@gmail.com>
 
+
+
+Copyright 2016 Nima Riahi
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
 """
 
 
@@ -58,27 +74,52 @@ def collectEmails(filein, fileex=None):
 
     
     def getEmails(filelist):
+        """Get 
+        """
     
         emails = set()
         for fname in filelist:
             # Load file (Universal flag to handle end-of-line)
             strEmails = open(fname,'rU').read()
             em = extractEmails(strEmails)
+            
+            # Add filename as 
+            
             emails = emails.union(em)
         
         return(emails)
     
-
-    emailsIn = getEmails(filein)
+    def getEmailsFromFile(fname):
+        """Get emails from a file
+        """
     
-    if fileex==None:
+        # Load file (Universal flag to handle end-of-line)
+        strEmails = open(fname,'rU').read()
+        em = extractEmails(strEmails)
+        
+        # Create a set of 2-tuples, filename and e-mail
+        em = {(fname, x) for x in em}
+        
+        # emails = emails.union(em)
+        
+        return(em)
+        
+        
+    emails = set()
+    for fname in filein:
+        em = getEmailsFromFile(fname)
+        emails = emails.union(em)
+        
+        
+    if fileex==None or fileex=='':
         emailsEx = set()
     else:
-        emailsEx = getEmails(fileex)
-    
+        emailsEx = getEmailsFromFile(fileex[0])
+
 
     # Remove exclude-emails from include-emails
-    emails = [k for k in emailsIn if not(k in emailsEx)]
+    emailsEx = {x[1] for x in emailsEx}  # Extract emails only to a set
+    emails = [k for k in emails if not(k[1] in emailsEx)]  # Exclude a tuple if its second element is in 'emailsEx'
     
     return(emails)
     
@@ -92,8 +133,13 @@ def output(emails, outfname=None):
     @return Writes directly to stdout
     """
         
-    for el in emails:
-        sys.stdout.write('%s\n' % (el,))
+        
+    while len(emails)>0:
+        el = emails.pop()
+        sys.stdout.write('%s , %s\n' % el)
+        
+    # for el in emails:
+    #     sys.stdout.write('%s , %s\n' % (el,))
     # f = open(outfname,'w')
 
 
@@ -115,6 +161,10 @@ def main():
     # Save them to variables
     filein = args.inputfiles
     fileex = args.exclude_addr
+    
+    # # For debugging purposes
+    # filein = ['phys.txt','usys.txt']
+    # fileex = ['erdw.txt']
     
     # Change directory to the location where the executed function is stored
     os.chdir(os.path.dirname(sys.argv[0]))

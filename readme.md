@@ -7,7 +7,7 @@ also be provided. UTF-8 encoding is assumed, but all text is
 projected down to ASCII before searching for e-mail
 addresses.
 
-This is a small Python utility and supposed to be run form
+This is a small Python utility and supposed to be run from
 the command line. Tested on Mac OS X, Python 2.7.
 
 
@@ -17,7 +17,8 @@ the command line. Tested on Mac OS X, Python 2.7.
 usage: email-raker.py [-h] [--exclude-addr EXCLUDE_ADDR]
                       inputfiles [inputfiles ...]
 
-Collect emails from unstructured files.
+Collect emails from unstructured files. Outputs a CSV to stdout, with the first column the name of the
+file and the second column the e-mails.
 
 positional arguments:
   inputfiles
