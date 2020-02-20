@@ -161,11 +161,7 @@ def main():
     # Save them to variables
     filein = args.inputfiles
     fileex = args.exclude_addr
-    
-    # # For debugging purposes
-    # filein = ['phys.txt','usys.txt']
-    # fileex = ['erdw.txt']
-    
+
     # Change directory to the location where the executed function is stored
     os.chdir(os.path.dirname(sys.argv[0]))
         
